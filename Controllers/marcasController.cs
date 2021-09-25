@@ -119,5 +119,22 @@ namespace _2017AS603.Controllers
             return Ok(marcaExiste);
 
         }
+
+        [HttpGet]
+        [Route("api/equipos/buscarestado/{buscarEstado}")]
+        public IActionResult obtenerEstado(string buscarEstado)
+        {
+            //"e" representa un alias para el listado de equipos
+            IEnumerable<marcas> marcaPorEstado = from e in _contexto.marcas
+                                                   where e.estados.Contains(buscarEstado)
+                                                   select e;
+            ///Se realiza el if para identificar que si encontro un dato y lo retorma mostrando esos datos
+            if (marcaPorEstado.Count() > 0)
+            {
+                return Ok(marcaPorEstado);
+            }
+            ///De ser menor a 0 retornara un error
+            return NotFound();
+        }
     }
 }

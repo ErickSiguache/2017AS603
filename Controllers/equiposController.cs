@@ -58,7 +58,7 @@ namespace _2017AS603.Controllers
         /// <param name="buscarNombre"> Representa el valor dado en el parametro en el campo Nombre </param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/equipo/buscarnombre/{buscarNombre}")]
+        [Route("api/equipos/buscarnombre/{buscarNombre}")]
         public IActionResult obtenerNombre(string buscarNombre)
         {
             //"e" representa un alias para el listado de equipos
@@ -138,6 +138,32 @@ namespace _2017AS603.Controllers
             
             return Ok(equipoExiste);
 
+        }
+
+
+
+        /// <summary>
+        /// Metodo de retorno de registros de equipos filtrado por el valor dado en el parametro
+        /// </summary>
+        /// <param name="buscarNombre"> Representa el valor dado en el parametro en el campo Nombre </param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/equipos/buscarequiestado/{buscarEstado}")]
+        public IActionResult equiposEstado(string buscarEstado)
+        {
+            //"e" representa un alias para el listado de equipos
+            IEnumerable<equipos> equipoPorEstado = from e in _contexto.equipos 
+                                                   join d in _contexto.estados_equipo 
+                                                   on e.estado_equipo_id equals d.id_estados_equipo
+                                                   where d.descripcion.Contains(buscarEstado)
+                                                   select e;
+            ///Se realiza el if para identificar que si encontro un dato y lo retorma mostrando esos datos
+            if (equipoPorEstado.Count() > 0)
+            {
+                return Ok(equipoPorEstado);
+            }
+            ///De ser menor a 0 retornara un error
+            return NotFound();
         }
     }
 }
