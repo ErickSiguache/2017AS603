@@ -49,7 +49,7 @@ namespace _2017AS603.Controllers
         {
             var unUsuario = from e in _contexto.usuarios
                              join carr in _contexto.carreras on e.carrera_id equals carr.carrera_id
-                             where e.carrera_id == id //Filtro por ID
+                             where e.usuario_id == id //Filtro por ID
                              select new
                              {
                                  e.usuario_id,
@@ -123,6 +123,35 @@ namespace _2017AS603.Controllers
 
             return Ok(usuarioExiste);
 
+        }
+
+        /// <summary>
+        /// Metodo de retorno de registros filtras por ID
+        /// </summary>
+        /// <param name="Carrid"> Representa el valor entero del campo ID </param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/usuarios/Xcarrera/{Carrid}")]
+        public IActionResult userCarrId(int Carrid)
+        {
+            var unUsuarioCarr = from e in _contexto.usuarios
+                            join carr in _contexto.carreras on e.carrera_id equals carr.carrera_id
+                            where e.carrera_id == Carrid //Filtro por ID
+                            select new
+                            {
+                                e.usuario_id,
+                                e.nombre,
+                                e.documento,
+                                e.tipo,
+                                e.carnet,
+                                carr.nombre_carrera
+                            };
+
+            if (unUsuarioCarr != null)
+            {
+                return Ok(unUsuarioCarr);
+            }
+            return NotFound();
         }
     }
 }
