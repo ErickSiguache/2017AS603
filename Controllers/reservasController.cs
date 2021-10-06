@@ -142,5 +142,40 @@ namespace _2017AS603.Controllers
             return Ok(reservasExiste);
 
         }
+
+
+        /// <summary>
+        /// Metodo de retorno de registros filtras por ID
+        /// </summary>
+        /// <param name="id"> Representa el valor entero del campo ID </param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/reservas/estadoID/{idEst}")]
+        public IActionResult getbyIdEst(int idEst)
+        {
+            var resEstID = from e in _contexto.reservas
+                           join equi in _contexto.equipos on e.equipo_id equals equi.id_equipos
+                           join usr in _contexto.usuarios on e.usuario_id equals usr.usuario_id
+                           join estR in _contexto.estados_reserva on e.estado_reserva_id equals estR.estado_res_id
+                           where e.estado_reserva_id == idEst //Filtro por ID
+                           select new
+                           {
+                               e.reserva_id,
+                               equipoNombre = equi.nombre,
+                               userNombre = usr.nombre,
+                               e.fecha_salida,
+                               e.hora_salida,
+                               e.tiempo_reserva,
+                               estR.estado,
+                               e.fecha_retorno,
+                               e.hora_retorno
+                           };
+
+            if (resEstID != null)
+            {
+                return Ok(resEstID);
+            }
+            return NotFound();
+        }
     }
 }
